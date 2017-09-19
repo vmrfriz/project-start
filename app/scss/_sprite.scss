@@ -1,0 +1,18 @@
+@mixin sprite-size( $sprite ) {
+	width: $sprite[4];
+	height: $sprite[5];
+}
+
+@mixin sprite-pos( $sprite ) {
+	background-position: $sprite[2] $sprite[3];
+}
+
+@mixin sprite-img( $sprite ) {
+	background-image: url(../images/$sprite[8]);
+}
+
+@mixin sprite($sprite) {
+	@include sprite-img( $sprite );
+	@include sprite-pos( $sprite );
+	@include sprite-size( $sprite );
+}

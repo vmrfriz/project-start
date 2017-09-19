@@ -1,0 +1,21 @@
+//@import '_sprite';
+
+$bg-color: #fff;
+$text-color: #000;
+$links-color: #00f;
+
+html, body {
+	color: $text-color;
+	font-family: 400 16px/1.2 Calibri, sans-serif;
+	background-color: $bg-color;
+}
+
+a {
+	color: $links-color;
+
+	&:hover,
+	&:active,
+	&:focus {
+		color: $links-color;
+	}
+}
