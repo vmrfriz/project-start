@@ -1,2 +1,4 @@
 node_modules/*
-app/template/*
+src/*
+build/*
+resource/*

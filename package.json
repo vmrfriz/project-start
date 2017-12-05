@@ -1,30 +1,35 @@
 {
-  "name": "planeta-zoo",
+  "name": "project-start",
   "version": "1.0.0",
   "description": "",
-  "main": "index.html",
+  "main": "gulpfile.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vmrfriz/project-start.git"
+  },
   "author": "Valeriy Grechukha",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vmrfriz/project-start/issues"
+  },
+  "homepage": "https://github.com/vmrfriz/project-start#readme",
   "devDependencies": {
-    "browser-sync": "^2.18.13",
-    "cssnano": "^3.10.0",
     "gulp": "^3.9.1",
     "gulp-autoprefixer": "^4.0.0",
-    "gulp-cache": "^0.4.6",
-    "gulp-changed": "^3.1.0",
+    "gulp-changed": "^3.1.1",
     "gulp-clean": "^0.3.2",
-    "gulp-htmlmin": "^3.0.0",
-    "gulp-imagemin": "^3.3.0",
-    "gulp-jade": "^1.1.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-filter": "^5.0.1",
     "gulp-notify": "^3.0.0",
+    "gulp-pug": "^3.3.0",
+    "gulp-pug-inheritance": "^0.2.1",
     "gulp-rename": "^1.2.2",
     "gulp-sass": "^3.1.0",
     "gulp-sourcemaps": "^2.6.1",
     "gulp-uglify": "^3.0.0",
-    "gulp.spritesmith": "^6.5.1",
-    "imagemin-pngquant": "^5.0.1"
+    "gulp-util": "^3.0.8"
   }
 }
