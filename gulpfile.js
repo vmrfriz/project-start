@@ -255,9 +255,10 @@ gulp.task('fonts', function () {});
 		-
 		-
 *************************************/
-gulp.task('watch', function () {
+gulp.task('watch', ['browser-sync'], function () {
 	gulp.watch('src/scss/**/*.[scss|sass]', ['scss-lint', 'scss']);  // lint and compile *.scss and *.sass files
-	gulp.watch('./app/css/**/*.css', browserSync.stream());          // reset styles in loaded page
+	gulp.watch('src/css/**/*.css', browserSync.stream());            // reset styles in loaded page
+	gulp.watch('src/*.html', browserSync.reload);                    // reload page before editing *.html files
 });
 
 /*************************************
@@ -284,7 +285,7 @@ gulp.task('clean', function () {});
 *************************************/
 gulp.task('browser-sync', function () {
 	browserSync.init({
-		server: './app',
+		server: 'src/',
 		notify: false
 	});
 });
