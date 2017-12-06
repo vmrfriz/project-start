@@ -15,38 +15,39 @@
 		3.2. Создание _sprite.scss в /scss/
 		3.3. Уведомление об ошибках
 
-	4. Сжатие *.jpg, *.jpeg, *.png | gulp images
-		4.1. Уведомление об ошибках
+##4. Сжатие *.jpg, *.jpeg, *.png | gulp images
+##	4.1. Уведомление об ошибках
 
-	5. Запуск локального http-сервера | gulp watch
-		5.1. Отслеживание *.pug - компиляция
-		5.2. Отслеживание *.html - обновление http
-		5.3. Отслеживание *.scss - компиляция
-		5.4. Отслеживание *.css - обновление http
-		5.5. Отслеживание *.js - обновление http
-		5.6. Отслеживание /img/*.* - обновление http
-		5.7. Отслеживание /fonts/*.* - обновление http
+##5. Запуск локального http-сервера | gulp watch
+##	5.1. Отслеживание *.pug - компиляция
+##	5.2. Отслеживание *.html - обновление http
+##	5.3. Отслеживание *.scss - компиляция
+##	5.4. Отслеживание *.css - обновление http
+##	5.5. Отслеживание *.js - обновление http
+##	5.6. Отслеживание /img/*.* - обновление http
+##	5.7. Отслеживание /fonts/*.* - обновление http
 
-	6. Сборка проекта | gulp build
-		6.1. Компиляция *.pug
-		6.2. Компиляция *.scss
-		6.3. Сжатие /img/*.*
-		6.4. Сохранение результатов в /dist/
-		6.4. Минификация *.html + суффикс .min
-		6.5. Минификация *.css + суффикс .min
-		6.6. Минификация *.js + суффикс .min
-		6.7. Сохранение результатов в /dist/
+##6. Сборка проекта | gulp build
+##	6.1. Компиляция *.pug
+##	6.2. Компиляция *.scss
+##	6.3. Сжатие /img/*.*
+##	6.4. Сохранение результатов в /dist/
+##	6.4. Минификация *.html + суффикс .min
+##	6.5. Минификация *.css + суффикс .min
+##	6.6. Минификация *.js + суффикс .min
+##	6.7. Сохранение результатов в /dist/
 
-	7. Генерация шрифтов | gulp fonts
-		7.1. Создание отсутствующих расширений шрифтов из *.woff, *.woff2, *.ttf, *.eot в /fonts/
-		7.2. Создание /scss/_fonts.scss с подключением шрифтов
-		7.3. Уведомление об ошибках
+##7. Генерация шрифтов | gulp fonts
+##	7.1. Создание отсутствующих расширений шрифтов из *.woff, *.woff2, *.ttf, *.eot в /fonts/
+##	7.2. Создание /scss/_fonts.scss с подключением шрифтов
+##	7.3. Уведомление об ошибках
 
 	8.
 
 	============ Debug list ============
 	Test sourcemap | gulp sass // https://github.com/gulp-sourcemaps/gulp-sourcemaps/issues/60
 	Add uncss | gulp build
+	Test sprite | gulp sprite
 
 	============ INFO ============
 	https://habrahabr.ru/post/252745/
@@ -97,11 +98,11 @@ gulp.task('help', function() {
 	gutil.log('| command       | description');
 	gutil.log('+---------------+------------------------');
 	gutil.log('| gulp help     | this information');
-	gutil.log('| gulp pug      | ');
-	gutil.log('| gulp scss     | ');
-	gutil.log('| gulp sprites  | ');
-	gutil.log('| gulp images   | ');
-	gutil.log('| gulp fonts    | ');
+	gutil.log('| gulp pug      | pug compilation');
+	gutil.log('| gulp scss     | scss compilation');
+	gutil.log('| gulp sprites  | generates img/sprite.png & scss/_sprite.scss from the files /img/sprite/');
+	gutil.log('| gulp images   | image compression');
+	gutil.log('| gulp fonts    | generation of missing types of fonts');
 	gutil.log('| gulp watch    | HTTP Server, watch and compile .pug and .scss');
 	gutil.log('| gulp build    | src/ -> compile, minimize, optimize -> build/');
 	gutil.log('+---------------+------------------------');
@@ -144,7 +145,22 @@ gulp.task('scss', function () {
 });
 
 // SPRITES
-gulp.task('sprites', function () {});
+gulp.task('sprites', function () {
+	var spriteData = gulp
+		.src('src/img/sprite/*.*')
+		.pipe(spritesmith({
+			imgName: 'sprite.png',
+			cssName: '_sprite.scss',
+			cssFormat: 'scss',
+			algorithm: 'binary-tree',
+			cssVarMap: function(sprite) {
+				sprite.name = 's-' + sprite.name
+			}
+		}));
+
+	spriteData.img.pipe(gulp.dest('src/img/'));
+	spriteData.css.pipe(gulp.dest('src/scss/'));
+});
 
 // IMAGES
 gulp.task('images', function () {});
