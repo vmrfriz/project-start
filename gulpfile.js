@@ -15,8 +15,7 @@
 		3.2. Создание _sprite.scss в /scss/
 		3.3. Уведомление об ошибках
 
-##4. Сжатие *.jpg, *.jpeg, *.png | gulp images
-##	4.1. Уведомление об ошибках
+	4. Сжатие *.jpg, *.jpeg, *.png | gulp images
 
 ##5. Запуск локального http-сервера | gulp watch
 ##	5.1. Отслеживание *.pug - компиляция
@@ -163,7 +162,18 @@ gulp.task('sprites', function () {
 });
 
 // IMAGES
-gulp.task('images', function () {});
+gulp.task('images', function () {
+	return gulp
+		.src(['src/img/**/*.[jpeg|jpg|png]', '!src/img/sprite/**/*.*'])
+		.pipe( cached(imagemin({
+			interlaced: true,
+			progressive: true,
+			optimizationLevel: 5,
+			svgoPlugins: [{removeViewBox: true}],
+			//use: [pngquant()]
+		})) )
+		.pipe( gulp.dest('build/img') );
+});
 
 //FONTS
 gulp.task('fonts', function () {});
