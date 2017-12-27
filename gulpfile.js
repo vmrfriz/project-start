@@ -57,7 +57,7 @@ var cached          = require('gulp-cached');           // only process what you
 var notify          = require('gulp-notify');           // Windows tray notifications
 // html
 var pug             = require('gulp-pug');              // compile .pug files to .html
-var pug             = require('gulp-pug-inheritance');  // make changes to the parent file for the HTTP server response
+var pugInheritance  = require('gulp-pug-inheritance');  // make changes to the parent file for the HTTP server response
 var filter          = require('gulp-filter');           // for pug-inheritance
 var htmlhint        = require("gulp-htmlhint");         // HTML validator
 // css
@@ -102,7 +102,7 @@ gulp.task('help', function() {
 });
 
 /*************************************
-	gulp pug
+	+ gulp pug
 		- выборка всех *.pug и *.jade файлов из src/pug/
 		- добавление суффикса .pug | file.pug -> file.pug.html
 		- игнорирование не изменённых файлов
@@ -114,21 +114,21 @@ gulp.task('help', function() {
 **************************************/
 gulp.task('pug', function () {
 	return gulp
-		.src('src/pug/**/*.[pug|jade]')
-		.pipe( rename({sufix: '.pug'}) ) // using before pug(opts.filename)
-		.pipe( changed('src/', {extension: '.html'}) )
-		.pipe( cached('pug') )
-		.pipe( pugInheritance({basedir: 'src'}) )
+		.src('./src/pug/**/*.pug')
+		.pipe( pugInheritance({basedir: 'src/pug/'}) )
 		.pipe( filter(function (file) {
 			return !/\/_/.test(file.path) && !/^_/.test(file.relative);
 		}) )
-		.pipe( pug().on( 'error', notify.onError({ message: "<%= error.message %>", title  : "PUG Error" }) ) )
+		.pipe( changed('./src/', {extension: '.pug.html'}) )
+		.pipe( rename({suffix: '.pug'}) ) // using before pug(opts.filename)
+		//.pipe( cached('pug') )
+		.pipe( pug({ pretty: true, cached: true }).on( 'error', notify.onError({ message: "<%= error.message %>", title  : "PUG Error" }) ) )
 		.pipe( htmlhint() )
-		.pipe( gulp.dest('src/') );
+		.pipe( gulp.dest('./src/') );
 });
 
 /*************************************
-	gulp scss
+	+ gulp scss
 		- выборка всех *.scss и *.sass файлов из src/scss/
 		- игнорирование не изменённых файлов
 		- кэш для ускорения компиляции
@@ -142,16 +142,16 @@ gulp.task('pug', function () {
 *************************************/
 gulp.task('scss', function () {
 	return gulp
-		.src('src/scss/**/*.[scss|sass]')
+		.src(['./src/scss/**/*.@(scss|sass)', '!./src/scss/**/_*'])
 		.pipe( changed('./src/css/', {extension: '.css'}) )
 		.pipe( cached('scss') )
 		.pipe( sourcemaps.init() )
 		.pipe( sass().on('error', notify.onError({ message: "<%= error.message %>", title  : "SASS Error" })) )
 		.pipe( sourcemaps.write({ includeContent: false }) )
 		.pipe( sourcemaps.init({ loadMaps: true }) )
-		.pipe(autoprefixer({ browser: ['last 2 version', '> 5%'], cascade: true }))
+		.pipe(autoprefixer({ browsers: ['last 2 version', '> 5%'], cascade: true }))
 		.pipe(sourcemaps.write('.'))
-		.pipe( gulp.dest( 'src/css/' ) );
+		.pipe( gulp.dest( './src/css/' ) );
 });
 
 /*************************************
@@ -167,7 +167,7 @@ gulp.task("scss-lint", function() {
 			"declaration-colon-space-after": "always",
 			"declaration-colon-space-before": "never",
 			"function-comma-space-after": "always",
-			"function-url-quotes": "double",
+			//"function-url-quotes": "double",
 			"media-feature-colon-space-after": "always",
 			"media-feature-colon-space-before": "never",
 			"media-feature-name-no-vendor-prefix": true,
@@ -175,12 +175,12 @@ gulp.task("scss-lint", function() {
 			"number-leading-zero": "never",
 			"number-no-trailing-zeros": true,
 			"property-no-vendor-prefix": true,
-			"rule-no-duplicate-properties": true,
-			"declaration-block-no-single-line": true,
-			"rule-trailing-semicolon": "always",
+			//"rule-no-duplicate-properties": true,
+			//"declaration-block-no-single-line": true,
+			//"rule-trailing-semicolon": "always",
 			"selector-list-comma-space-before": "never",
 			"selector-list-comma-newline-after": "always",
-			"selector-no-id": true,
+			//"selector-no-id": true,
 			"string-quotes": "double",
 			"value-no-vendor-prefix": true
 		}
@@ -193,7 +193,7 @@ gulp.task("scss-lint", function() {
 		})
 	];
 	return gulp
-		.src('src/scss/**/*.[scss|sass]')
+		.src('./src/scss/**/*.@(scss|sass)')
 		.pipe( postcss(processors, {syntax: syntax_scss}) );
 });
 
@@ -206,7 +206,7 @@ gulp.task("scss-lint", function() {
 *************************************/
 gulp.task('sprites', function () {
 	var spriteData = gulp
-		.src('src/img/sprite/*.[jpg|jpeg|png]')
+		.src('./src/img/sprite/*.@(jpg|jpeg|png)')
 		.pipe(spritesmith({
 			imgName: 'sprite.png',
 			cssName: '_sprite.scss',
@@ -217,8 +217,8 @@ gulp.task('sprites', function () {
 			}
 		}));
 
-	spriteData.img.pipe(gulp.dest('src/img/'));
-	spriteData.css.pipe(gulp.dest('src/scss/'));
+	spriteData.img.pipe(gulp.dest('./src/img/'));
+	spriteData.css.pipe(gulp.dest('./src/scss/'));
 });
 
 /*************************************
@@ -230,7 +230,7 @@ gulp.task('sprites', function () {
 *************************************/
 gulp.task('images', function () {
 	return gulp
-		.src(['src/img/**/*.[jpeg|jpg|png]', '!src/img/sprite/**/*.*'])
+		.src(['./src/img/**/*.@(jpeg|jpg|png)', '!./src/img/sprite/**/*.*'])
 		.pipe( cached(imagemin({
 			interlaced: true,
 			progressive: true,
@@ -256,9 +256,9 @@ gulp.task('fonts', function () {});
 		-
 *************************************/
 gulp.task('watch', ['browser-sync'], function () {
-	gulp.watch('src/scss/**/*.[scss|sass]', ['scss-lint', 'scss']);  // lint and compile *.scss and *.sass files
-	gulp.watch('src/css/**/*.css', browserSync.stream());            // reset styles in loaded page
-	gulp.watch('src/*.html', browserSync.reload);                    // reload page before editing *.html files
+	gulp.watch('./src/scss/**/*.@(scss|sass)', ['scss']);  // lint and compile *.scss and *.sass files
+	gulp.watch('./src/css/**/*.css', browserSync.stream());            // reset styles in loaded page
+	gulp.watch('./src/*.html', browserSync.reload);                    // reload page before editing *.html files
 });
 
 /*************************************
@@ -285,8 +285,10 @@ gulp.task('clean', function () {});
 *************************************/
 gulp.task('browser-sync', function () {
 	browserSync.init({
-		server: 'src/',
-		notify: false
+		server: './src/',
+		notify: false,
+		reloadOnRestart: true,
+		startPath: "/index.pug.html"
 	});
 });
 

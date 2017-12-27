@@ -1,21 +1,4 @@
 {
-  "name": "project-start",
-  "version": "1.0.0",
-  "description": "",
-  "main": "gulpfile.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/vmrfriz/project-start.git"
-  },
-  "author": "Valeriy Grechukha",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/vmrfriz/project-start/issues"
-  },
-  "homepage": "https://github.com/vmrfriz/project-start#readme",
   "devDependencies": {
     "browser-sync": "^2.18.13",
     "gulp": "^3.9.1",
